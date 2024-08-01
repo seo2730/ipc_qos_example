@@ -26,6 +26,17 @@ class WebcamSubscriber : public rclcpp::Node
 
  private:
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber1_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber2_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber3_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber4_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber5_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber6_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber7_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber8_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber9_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber10_;
+
 };
 
 #endif
