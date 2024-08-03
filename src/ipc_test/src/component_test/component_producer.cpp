@@ -1,4 +1,4 @@
-#include "ipc_test/component_producer.hpp"
+#include "component_test/component_producer.hpp"
 
 namespace ipc_test
 {

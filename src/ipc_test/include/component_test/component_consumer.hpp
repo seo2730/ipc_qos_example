@@ -1,5 +1,5 @@
-#ifndef COMPONENT_PRODUCER_HPP
-#define COMPONENT_PRODUCER_HPP
+#ifndef COMPONENT_CONSUMER_HPP
+#define COMPONENT_CONSUMER_HPP
 
 #include <chrono>
 #include <cinttypes>
@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 
-#include "ipc_test/component_visualibility.h"
+#include "component_test/component_visualibility.h"
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/int32.hpp"
@@ -19,17 +19,17 @@ using namespace std::chrono_literals;
 namespace ipc_test
 {
 
-class Producer : public rclcpp::Node
+class Consumer : public rclcpp::Node
 {
  public:
   COMPOSITION_PUBLIC
-  explicit Producer(const rclcpp::NodeOptions &options);
-  ~Producer();
-
+  explicit Consumer(const rclcpp::NodeOptions &options);
+  ~Consumer();
  private:
-  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_;
-  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr sub_;
+
 };
 
 }
+
 #endif

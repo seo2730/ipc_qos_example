@@ -1,4 +1,4 @@
-#include "ipc_test/component_consumer.hpp"
+#include "component_test/component_consumer.hpp"
 
 namespace ipc_test
 {

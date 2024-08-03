@@ -1,6 +1,6 @@
-#include "ipc_test/non_ipc_cam_pub.hpp"
+#include "ipc_cam/non_ipc_cam_pub.hpp"
 
-WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &output) : Node(name, rclcpp::NodeOptions().use_intra_process_comms(false))
+WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &output) : Node(name, rclcpp::NodeOptions().use_intra_process_comms(true))
 {
   this->publisher_ = this->create_publisher<sensor_msgs::msg::Image>(output, 10);
   // this->publisher2_ = this->create_publisher<sensor_msgs::msg::Image>("/test_image", 10);
@@ -33,12 +33,12 @@ WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &out
       // std::shared_ptr를 std::unique_ptr로 이동하여 변환
       auto unique_msg = std::make_unique<sensor_msgs::msg::Image>(*shared_msg);
       RCLCPP_INFO(this->get_logger(), "Publishing image width : %f, height : %f", cap_.get(cv::CAP_PROP_FRAME_WIDTH), cap_.get(cv::CAP_PROP_FRAME_HEIGHT));
-      RCLCPP_INFO(this->get_logger(), "Publishing image message with address: %p", reinterpret_cast<std::uintptr_t>(unique_msg.get()));
-      publisher_->publish(std::move(unique_msg));
+      RCLCPP_INFO(this->get_logger(), "Publishing image message with size %d and address: %p", sizeof(unique_msg->data), reinterpret_cast<std::uintptr_t>(unique_msg.get()));
+      // publisher_->publish(std::move(unique_msg));
       
       // RCLCPP_INFO(rclcpp::get_logger("logger"), "Published message with address: %p", reinterpret_cast<std::uintptr_t>(shared_msg.get()));  
-      // publisher_->publish(*shared_msg);
-      
+      publisher_->publish(*shared_msg);
+      this->PrintProcessUsage(this->pid_);
       // auto msg = cv_bridge::CvImage(header, "bgr8", frame).toImageMsg();
       // // sensor_msgs::msg::Image::UniquePtr img_msg(new sensor_msgs::msg::Image());
       // // img_msg = std::make_unique<sensor_msgs::msg::Image>(*msg);
@@ -64,7 +64,7 @@ WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &out
   };
 
   timer_ = this->create_wall_timer(
-      std::chrono::milliseconds(1000),
+      std::chrono::milliseconds(1),
       callback
   );
 
@@ -73,9 +73,6 @@ WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &out
   if (!cap_.isOpened()) {
       RCLCPP_ERROR(this->get_logger(), "Failed to open camera");
   }
-
-  // cap_.set(cv::CAP_PROP_FRAME_WIDTH, 640);  // 원하는 해상도 너비
-  // cap_.set(cv::CAP_PROP_FRAME_HEIGHT, 480); // 원하는 해상도 높이
 }
 
 WebcamPublisher::~WebcamPublisher()
@@ -101,6 +98,56 @@ void WebcamPublisher::timerCallback()
   } else {
       RCLCPP_ERROR(this->get_logger(), "Failed to capture image");
   }
+}
+
+void WebcamPublisher::PrintProcessUsage(pid_t pid) 
+{
+  // this->count_++;
+  std::ifstream stat_file("/proc/" + std::to_string(pid) + "/stat");
+  if (!stat_file.is_open()) {
+      std::cerr << "Failed to open /proc/" << pid << "/stat" << std::endl;
+      return;
+  }
+
+  std::string line;
+  std::getline(stat_file, line);
+  std::istringstream iss(line);
+
+  std::vector<std::string> values;
+  std::string value;
+  while (iss >> value) {
+      values.push_back(value);
+  }
+
+  stat_file.close();
+
+  if (values.size() < 24) {
+      std::cerr << "Error reading /proc/" << pid << "/stat" << std::endl;
+      return;
+  }
+
+  unsigned long utime = std::stoul(values[13]);
+  unsigned long stime = std::stoul(values[14]);
+  unsigned long starttime = std::stoul(values[21]);
+  long rss = std::stol(values[23]);
+
+  // CPU 사용량 계산
+  // double hertz = sysconf(_SC_CLK_TCK);
+  // double total_time = (utime + stime) / hertz;
+
+  std::ifstream uptime_file("/proc/uptime");
+  double uptime;
+  uptime_file >> uptime;
+  uptime_file.close();
+
+  // double process_uptime = uptime - (starttime / hertz);
+  // double cpu_usage = 100.0 * (total_time / process_uptime);
+
+  // 메모리 사용량 계산
+  long page_size_kb = sysconf(_SC_PAGE_SIZE) / 1024; // 페이지 크기를 KB로 변환
+  long resident_set = rss * page_size_kb;
+
+  RCLCPP_ERROR(rclcpp::get_logger("logger"), "Process ID: %d, Memory: %dKB", static_cast<int>(pid), resident_set);
 }
 
 int main(int argc, char * argv[])

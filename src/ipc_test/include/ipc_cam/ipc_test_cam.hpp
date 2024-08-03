@@ -30,6 +30,12 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
     cv::VideoCapture cap_;
+
+    double max_memory_;
+    double average_memory_;
+    double min_memory_;
+
+    // double count_=0;
 };
 
 class WebcamSubscriber : public rclcpp::Node

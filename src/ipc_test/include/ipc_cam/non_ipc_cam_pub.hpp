@@ -26,19 +26,22 @@ public:
 
 private:
     void timerCallback();
+    void PrintProcessUsage(pid_t pid);
 
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher2_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher3_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher4_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher5_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher6_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher7_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher8_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher9_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher10_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher2_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher3_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher4_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher5_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher6_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher7_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher8_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher9_;
+    // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher10_;
     rclcpp::TimerBase::SharedPtr timer_;
     cv::VideoCapture cap_;
+
+    pid_t pid_ = getpid();
 };
 
 #endif

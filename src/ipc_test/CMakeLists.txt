@@ -38,7 +38,7 @@ include_directories(include
 set(node_plugins "")
 
 add_library(component_producer SHARED
-  src/component_producer.cpp)
+  src/component_test/component_producer.cpp)
 target_compile_definitions(component_producer
   PRIVATE "COMPOSITION_BUILDING_DLL")
 ament_target_dependencies(component_producer
@@ -49,7 +49,7 @@ rclcpp_components_register_nodes(component_producer "ipc_test::Producer")
 set(node_plugins "${node_plugins}ipc_test::Producer;$<TARGET_FILE:component_producer>\n")
 
 add_library(component_consumer SHARED
-  src/component_consumer.cpp)
+  src/component_test/component_consumer.cpp)
 target_compile_definitions(component_consumer
   PRIVATE "COMPOSITION_BUILDING_DLL")
 ament_target_dependencies(component_consumer
@@ -74,39 +74,33 @@ set(node_plugins "${node_plugins}ipc_test::Consumer;$<TARGET_FILE:component_cons
 
 # set 
 set(ipc_test_1_src
-  src/ipc_test1.cpp  
+  src/ipc_test/ipc_test1.cpp  
 )
-
 set(non_ipc_test_producer_src
-  src/non_ipc_test_producer.cpp  
+  src/ipc_test/non_ipc_test_producer.cpp  
 )
-
 set(non_ipc_test_consumer_src
-  src/non_ipc_test_consumer.cpp  
+  src/ipc_test/non_ipc_test_consumer.cpp  
 )
-
 set(two_node_single_thread_src
-  src/ipc_test_producer.cpp
-  src/ipc_test_consumer.cpp  
-  src/two_node_single_thread.cpp
+  src/ipc_test/ipc_test_producer.cpp
+  src/ipc_test/ipc_test_consumer.cpp  
+  src/ipc_test/two_node_single_thread.cpp
 )
-
 set(two_node_multi_thread_src
-  src/ipc_test_producer.cpp
-  src/ipc_test_consumer.cpp  
-  src/two_node_multi_thread.cpp
+  src/ipc_test/ipc_test_producer.cpp
+  src/ipc_test/ipc_test_consumer.cpp  
+  src/ipc_test/two_node_multi_thread.cpp
 )
 
 set(ipc_test_cam_src
-  src/ipc_test_cam.cpp
+  src/ipc_cam/ipc_test_cam.cpp
 )
-
 set(non_ipc_cam_pub_src
-  src/non_ipc_cam_pub.cpp
+  src/ipc_cam/non_ipc_cam_pub.cpp
 )
-
 set(non_ipc_cam_sub_src
-  src/non_ipc_cam_sub.cpp
+  src/ipc_cam/non_ipc_cam_sub.cpp
 )
 
 # add executable
