@@ -102,34 +102,44 @@ set(non_ipc_cam_pub_src
 set(non_ipc_cam_sub_src
   src/ipc_cam/non_ipc_cam_sub.cpp
 )
+set(cam_single_thread_src
+  src/ipc_cam/ipc_cam_pub.cpp
+  src/ipc_cam/ipc_cam_sub.cpp
+  src/ipc_cam/cam_single_thread.cpp
+)
+set(cam_multi_thread_src
+  src/ipc_cam/ipc_cam_pub.cpp
+  src/ipc_cam/ipc_cam_sub.cpp
+  src/ipc_cam/cam_multi_thread.cpp
+)
 
 # add executable
 add_executable(ipc_test1 ${ipc_test_1_src})
 ament_target_dependencies(ipc_test1 rclcpp std_msgs)
-
 add_executable(non_ipc_test_producer ${non_ipc_test_producer_src})
 ament_target_dependencies(non_ipc_test_producer rclcpp std_msgs)
-
 add_executable(non_ipc_test_consumer ${non_ipc_test_consumer_src})
 ament_target_dependencies(non_ipc_test_consumer rclcpp std_msgs)
-
 add_executable(two_node_single_thread ${two_node_single_thread_src})
 ament_target_dependencies(two_node_single_thread rclcpp std_msgs)
-
 add_executable(two_node_multi_thread ${two_node_multi_thread_src})
 ament_target_dependencies(two_node_multi_thread rclcpp sensor_msgs)
 
 add_executable(ipc_test_cam ${ipc_test_cam_src})
 ament_target_dependencies(ipc_test_cam rclcpp std_msgs OpenCV cv_bridge)
 target_link_libraries(ipc_test_cam ${OpenCV_LIBS})
-
 add_executable(non_ipc_cam_pub ${non_ipc_cam_pub_src})
 ament_target_dependencies(non_ipc_cam_pub rclcpp std_msgs OpenCV cv_bridge)
 target_link_libraries(non_ipc_cam_pub ${OpenCV_LIBS})
-
 add_executable(non_ipc_cam_sub ${non_ipc_cam_sub_src})
 ament_target_dependencies(non_ipc_cam_sub rclcpp std_msgs OpenCV cv_bridge)
 target_link_libraries(non_ipc_cam_sub ${OpenCV_LIBS})
+add_executable(cam_single_thread ${cam_single_thread_src})
+ament_target_dependencies(cam_single_thread rclcpp std_msgs OpenCV cv_bridge)
+target_link_libraries(cam_single_thread ${OpenCV_LIBS})
+add_executable(cam_multi_thread ${cam_multi_thread_src})
+ament_target_dependencies(cam_multi_thread rclcpp std_msgs OpenCV cv_bridge)
+target_link_libraries(cam_multi_thread ${OpenCV_LIBS})
 
 # install
 install(TARGETS
@@ -141,6 +151,8 @@ install(TARGETS
   ipc_test_cam
   non_ipc_cam_pub
   non_ipc_cam_sub
+  cam_single_thread
+  cam_multi_thread
   DESTINATION lib/${PROJECT_NAME}
 )
 
