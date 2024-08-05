@@ -3,7 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
-                "~/duck_project/ipc_qos_ws/ipc_test/include/**",
+                "~/duck_project/ipc_qos_example/ipc_test/include/**",
                 "/opt/ros/foxy/include/**"
             ],
             "defines": [],
