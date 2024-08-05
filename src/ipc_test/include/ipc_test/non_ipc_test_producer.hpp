@@ -8,6 +8,12 @@
 #include <string>
 #include <utility>
 
+#include <fstream>
+#include <string>
+#include <unistd.h>
+#include <sstream>
+#include <vector>
+
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/int32.hpp"
@@ -24,6 +30,8 @@ class Producer : public rclcpp::Node
  private:
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_;
   rclcpp::TimerBase::SharedPtr timer_;
+
+  pid_t pid_ = getpid();
 };
 
 #endif

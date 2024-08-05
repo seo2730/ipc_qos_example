@@ -1,6 +1,6 @@
 #include "ipc_cam/non_ipc_cam_sub.hpp"
 
-WebcamSubscriber::WebcamSubscriber(const std::string &name, const std::string &input) : Node(name, rclcpp::NodeOptions().use_intra_process_comms(true))
+WebcamSubscriber::WebcamSubscriber(const std::string &name, const std::string &input) : Node(name, rclcpp::NodeOptions().use_intra_process_comms(false))
 {
   // Create a subscription on the input topic which prints on receipt of new messages
   this->subscriber_ = this->create_subscription<sensor_msgs::msg::Image>(input, 10, 

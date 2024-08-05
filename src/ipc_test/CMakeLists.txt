@@ -47,7 +47,6 @@ ament_target_dependencies(component_producer
   "std_msgs")
 rclcpp_components_register_nodes(component_producer "ipc_test::Producer")
 set(node_plugins "${node_plugins}ipc_test::Producer;$<TARGET_FILE:component_producer>\n")
-
 add_library(component_consumer SHARED
   src/component_test/component_consumer.cpp)
 target_compile_definitions(component_consumer
@@ -59,18 +58,36 @@ ament_target_dependencies(component_consumer
 rclcpp_components_register_nodes(component_consumer "ipc_test::Consumer")
 set(node_plugins "${node_plugins}ipc_test::Consumer;$<TARGET_FILE:component_consumer>\n")
 
-# No inherit Node CPP File
-# add_library(node_like_listener_component SHARED
-#   src/node_like_listener_component.cpp)
-# target_compile_definitions(node_like_listener_component
-#   PRIVATE "COMPOSITION_BUILDING_DLL")
-# ament_target_dependencies(node_like_listener_component
-#   "rclcpp"
-#   "rclcpp_components"
-#   "std_msgs")
-# rclcpp_components_register_nodes(node_like_listener_component "composition::NodeLikeListener")
-# set(node_plugins "${node_plugins}composition::NodeLikeListener;$<TARGET_FILE:node_like_listener_component>\n")
+set(node_plugins "")
+add_library(component_cam_pub SHARED
+  src/component_cam/component_cam_pub.cpp)
+target_compile_definitions(component_cam_pub
+  PRIVATE "COMPOSITION_BUILDING_DLL")
+target_link_libraries(component_cam_pub ${OpenCV_LIBS})
+ament_target_dependencies(component_cam_pub
+  "rclcpp"
+  "rclcpp_components"
+  "std_msgs"
+  "sensor_msgs"
+  "OpenCV"
+  "cv_bridge")
+rclcpp_components_register_nodes(component_cam_pub "component_cam::WebcamPublisher")
+set(node_plugins "${node_plugins}component_cam::WebcamPublisher;$<TARGET_FILE:component_cam_pub>\n")
 
+add_library(component_cam_sub SHARED
+  src/component_cam/component_cam_sub.cpp)
+target_compile_definitions(component_cam_sub
+  PRIVATE "COMPOSITION_BUILDING_DLL")
+target_link_libraries(component_cam_sub ${OpenCV_LIBS})
+ament_target_dependencies(component_cam_sub
+  "rclcpp"
+  "rclcpp_components"
+  "std_msgs"
+  "sensor_msgs"
+  "OpenCV"
+  "cv_bridge")
+rclcpp_components_register_nodes(component_cam_sub "component_cam::WebcamSubscriber")
+set(node_plugins "${node_plugins}component_cam::WebcamSubscriber;$<TARGET_FILE:component_cam_sub>\n")
 
 # set 
 set(ipc_test_1_src
@@ -159,6 +176,8 @@ install(TARGETS
 install(TARGETS
   component_producer
   component_consumer
+  component_cam_pub
+  component_cam_sub
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

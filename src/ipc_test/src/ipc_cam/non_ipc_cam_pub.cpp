@@ -1,6 +1,6 @@
 #include "ipc_cam/non_ipc_cam_pub.hpp"
 
-WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &output) : Node(name, rclcpp::NodeOptions().use_intra_process_comms(true))
+WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &output) : Node(name, rclcpp::NodeOptions().use_intra_process_comms(false))
 {
   this->publisher_ = this->create_publisher<sensor_msgs::msg::Image>(output, 10);
   // this->publisher2_ = this->create_publisher<sensor_msgs::msg::Image>("/test_image", 10);
@@ -33,10 +33,10 @@ WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &out
       // std::shared_ptr를 std::unique_ptr로 이동하여 변환
       auto unique_msg = std::make_unique<sensor_msgs::msg::Image>(*shared_msg);
       RCLCPP_INFO(this->get_logger(), "Publishing image width : %f, height : %f", cap_.get(cv::CAP_PROP_FRAME_WIDTH), cap_.get(cv::CAP_PROP_FRAME_HEIGHT));
-      RCLCPP_INFO(this->get_logger(), "Publishing image message with size %d and address: %p", sizeof(unique_msg->data), reinterpret_cast<std::uintptr_t>(unique_msg.get()));
+      // RCLCPP_INFO(this->get_logger(), "Publishing image message with size %d and address: %p", sizeof(unique_msg->data), reinterpret_cast<std::uintptr_t>(unique_msg.get()));
       // publisher_->publish(std::move(unique_msg));
       
-      // RCLCPP_INFO(rclcpp::get_logger("logger"), "Published message with address: %p", reinterpret_cast<std::uintptr_t>(shared_msg.get()));  
+      RCLCPP_INFO(rclcpp::get_logger("logger"), "Published message with address: %p", reinterpret_cast<std::uintptr_t>(shared_msg.get()));  
       publisher_->publish(*shared_msg);
       this->PrintProcessUsage(this->pid_);
       // auto msg = cv_bridge::CvImage(header, "bgr8", frame).toImageMsg();
@@ -64,7 +64,7 @@ WebcamPublisher::WebcamPublisher(const std::string &name, const std::string &out
   };
 
   timer_ = this->create_wall_timer(
-      std::chrono::milliseconds(1),
+      std::chrono::milliseconds(1000),
       callback
   );
 
