@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ipc_test)
+project(ipc_qos_example)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -23,6 +23,9 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(OpenCV 4.4.0 REQUIRED)
 find_package(cv_bridge REQUIRED)
+
+# gtest 라이브러리 찾기
+find_package(ament_cmake_gtest REQUIRED)
 
 # To use rclcpp_components_register_nodes
 find_package(rclcpp_components REQUIRED)
@@ -157,6 +160,14 @@ target_link_libraries(cam_single_thread ${OpenCV_LIBS})
 add_executable(cam_multi_thread ${cam_multi_thread_src})
 ament_target_dependencies(cam_multi_thread rclcpp std_msgs OpenCV cv_bridge)
 target_link_libraries(cam_multi_thread ${OpenCV_LIBS})
+
+set(test_src
+  test/test_ipc_test_consumer.cpp
+  src/ipc_test/ipc_test_consumer.cpp
+)
+# 테스트 파일 추가
+ament_add_gtest(test_ipc_test_consumer ${test_src})
+ament_target_dependencies(test_ipc_test_consumer rclcpp std_msgs)
 
 # install
 install(TARGETS
